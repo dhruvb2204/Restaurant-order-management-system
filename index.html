@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OrderFlow restaurant order management system">
+  <title>OrderFlow | Restaurant Management</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" data-view="dashboard">
+        <span class="brand-mark">OF</span>
+        <span><strong>OrderFlow</strong><small>Restaurant OS</small></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#dashboard" data-view="dashboard" class="nav-link active"><span>▦</span> Dashboard</a>
+        <a href="#new-order" data-view="new-order" class="nav-link"><span>＋</span> New Order</a>
+        <a href="#kitchen" data-view="kitchen" class="nav-link"><span>♨</span> Kitchen</a>
+        <a href="#history" data-view="history" class="nav-link"><span>◷</span> Order History</a>
+        <a href="#menu-management" data-view="menu-management" class="nav-link"><span>☷</span> Menu Management</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="live-indicator"><i></i> System operational</div>
+        <p>OrderFlow</p>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button mobile-menu" id="mobile-menu" aria-label="Open menu">☰</button>
+        <div>
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        <div class="topbar-actions">
+          <span class="date-display" id="current-date"></span>
+          <button class="button button-primary" data-view="new-order">＋ New order</button>
+        </div>
+      </header>
+
+      <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+      <section id="dashboard-view" class="view active-view">
+        <div class="welcome-banner">
+          <div><p class="eyebrow light">Service overview</p><h2>Keep every order moving.</h2><p>Monitor today’s service and keep your kitchen in sync.</p></div>
+          <div class="banner-icon">◒</div>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon blue">▣</div><div><span>Total orders</span><strong id="stat-total">0</strong><small id="stat-total-change">All time</small></div></article>
+          <article class="stat-card"><div class="stat-icon orange">◴</div><div><span>Pending</span><strong id="stat-pending">0</strong><small>In waiting queue</small></div></article>
+          <article class="stat-card"><div class="stat-icon purple">♨</div><div><span>Preparing</span><strong id="stat-preparing">0</strong><small>In the kitchen</small></div></article>
+          <article class="stat-card"><div class="stat-icon teal">◆</div><div><span>Ready</span><strong id="stat-ready">0</strong><small>Awaiting pickup</small></div></article>
+          <article class="stat-card"><div class="stat-icon green">✓</div><div><span>Completed</span><strong id="stat-completed">0</strong><small>Successfully served</small></div></article>
+          <article class="stat-card revenue-card"><div class="stat-icon blue">₹</div><div><span>Total revenue</span><strong id="stat-revenue">₹0</strong><small>Completed orders</small></div></article>
+        </div>
+        <div class="content-grid dashboard-grid">
+          <article class="panel recent-panel"><div class="panel-heading"><div><p class="eyebrow">Activity</p><h3>Recent orders</h3></div><a href="#history" data-view="history" class="text-link">View all →</a></div><div id="recent-orders" class="table-wrap"></div></article>
+          <article class="panel"><div class="panel-heading"><div><p class="eyebrow">Live queue</p><h3>Waiting orders</h3></div><a href="#kitchen" data-view="kitchen" class="text-link">Open kitchen →</a></div><div id="queue-preview"></div></article>
+        </div>
+      </section>
+
+      <section id="new-order-view" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Order taking</p><h2>Create a new order</h2><p>Select items from the menu and send the order to the kitchen queue.</p></div></div>
+        <div class="order-layout">
+          <div class="panel menu-panel"><div class="filter-row" id="category-filters"></div><div id="menu-catalog" class="menu-grid"></div></div>
+          <aside class="panel cart-panel"><div class="panel-heading"><div><p class="eyebrow">Current ticket</p><h3>Your order</h3></div><span class="cart-count" id="cart-count">0</span></div><label class="field-label" for="customer-name">Customer name</label><input id="customer-name" class="text-input" type="text" placeholder="Enter customer name" maxlength="60"><div id="cart-items" class="cart-items"></div><div class="bill-summary"><div><span>Subtotal</span><strong id="cart-subtotal">₹0</strong></div><div><span>Tax (5%)</span><strong id="cart-tax">₹0</strong></div><div class="bill-total"><span>Total</span><strong id="cart-total">₹0</strong></div></div><button id="place-order" class="button button-primary button-wide">Place order <span>→</span></button></aside>
+        </div>
+      </section>
+
+      <section id="kitchen-view" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Kitchen control</p><h2>Kitchen order board</h2><p>Process orders in FIFO order and keep statuses up to date.</p></div><div class="queue-pill">Queue size <strong id="queue-size">0</strong></div></div>
+        <div class="status-columns"><article class="status-column"><div class="column-heading pending-heading"><span class="status-dot"></span><h3>Pending</h3><span id="pending-count" class="count-badge">0</span></div><div id="pending-orders" class="order-stack"></div></article><article class="status-column"><div class="column-heading preparing-heading"><span class="status-dot"></span><h3>Preparing</h3><span id="preparing-count" class="count-badge">0</span></div><div id="preparing-orders" class="order-stack"></div></article><article class="status-column"><div class="column-heading ready-heading"><span class="status-dot"></span><h3>Ready</h3><span id="ready-count" class="count-badge">0</span></div><div id="ready-orders" class="order-stack"></div></article><article class="status-column"><div class="column-heading completed-heading"><span class="status-dot"></span><h3>Completed</h3><span id="completed-count" class="count-badge">0</span></div><div id="completed-orders" class="order-stack"></div></article></div>
+      </section>
+
+      <section id="history-view" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Records</p><h2>Order history</h2><p>Search and review every order processed by your restaurant.</p></div></div>
+        <article class="panel"><div class="toolbar"><input id="history-search" class="text-input search-input" type="search" placeholder="Search by order ID or customer name"><select id="history-status" class="select-input"><option value="all">All statuses</option><option value="Pending">Pending</option><option value="Preparing">Preparing</option><option value="Ready">Ready</option><option value="Completed">Completed</option><option value="Cancelled">Cancelled</option></select></div><div id="history-table" class="table-wrap"></div></article>
+      </section>
+
+      <section id="menu-management-view" class="view">
+        <div class="section-intro"><div><p class="eyebrow">Catalog</p><h2>Menu management</h2><p>Keep your digital menu accurate and available for order taking.</p></div><button id="add-menu-item" class="button button-primary">＋ Add menu item</button></div>
+        <article class="panel"><div id="management-table" class="table-wrap"></div></article>
+      </section>
+    </main>
+  </div>
+
+  <div id="item-modal" class="modal-backdrop hidden"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-heading"><h3 id="modal-title">Add menu item</h3><button class="icon-button" id="close-modal" aria-label="Close">×</button></div><form id="menu-form"><input type="hidden" id="menu-item-id"><label class="field-label" for="item-name">Item name</label><input id="item-name" class="text-input" required maxlength="60"><div class="form-grid"><div><label class="field-label" for="item-category">Category</label><select id="item-category" class="select-input" required><option>Starters</option><option>Main Course</option><option>Fast Food</option><option>Beverages</option><option>Desserts</option></select></div><div><label class="field-label" for="item-price">Price (₹)</label><input id="item-price" class="text-input" type="number" min="1" step="1" required></div></div><label class="field-label" for="item-icon">Food icon</label><input id="item-icon" class="text-input" placeholder="🍽️" maxlength="4"><label class="checkbox-label"><input id="item-enabled" type="checkbox" checked> Available for ordering</label><button class="button button-primary button-wide" type="submit">Save menu item</button></form></div></div>
+
+  <div id="details-modal" class="modal-backdrop hidden"><div class="modal" role="dialog" aria-modal="true"><div class="modal-heading"><h3 id="details-title">Order details</h3><button class="icon-button close-details" aria-label="Close">×</button></div><div id="details-content"></div></div></div>
+  <script src="js/queue.js"></script>
+  <script src="js/linkedlist.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
